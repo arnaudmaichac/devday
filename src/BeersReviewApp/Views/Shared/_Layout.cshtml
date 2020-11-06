@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Baraki N.V - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <h1 id="header_logo"><a href="/"><img src="~/images/logo.png" alt="Baraki N.V" /></a></h1>
+        <nav>
+            <ul>
+                <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a asp-controller="Review" asp-action="Index">Reviews</a></li>
+                <li><a asp-controller="Review" asp-action="Create">Upload a Picture</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="content_wrapper">
+        <div id="content">
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer>
+        <p>
+            <a href="#">Privacy & Cookies</a>
+            <a href="#">Website Terms of Use</a>
+            <a href="#">Trademarks</a>
+            <a href="#">Report Abuse</a>
+            <span>&copy; @DateTime.Now.Year - Baraki N.V.</span>
+        </p>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

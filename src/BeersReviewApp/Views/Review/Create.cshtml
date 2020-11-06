@@ -1,0 +1,86 @@
+﻿@model BeersReviewApp.Models.CreateBeerReview
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<form asp-controller="Review" asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-horizontal create-page">
+        <div class="row header">
+            <div class="col-md-6">
+                <h2>Add Picture</h2>
+            </div>
+            <div class="col-md-6">
+                <a asp-action="Index" class="button back-button">
+                    <i class="glyphicon glyphicon-backward"></i> return to reviews
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <label asp-for="Image" id="upload-preview">
+                    <span class="no-image">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Image
+                    </span>
+                </label>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label asp-for="Image" class="control-label col-md-2"></label>
+                    <div class="col-md-10">
+                        <input type="file" asp-for="Image" class="file-picker form-control" onchange="previewImage(this);" />
+                        <label asp-for="Image" style="width: 100%">
+                            <input type="text" disabled id="file-name" class="form-control" />
+                        </label>
+                        <span asp-validation-for="Image" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ReviewText" class="control-label col-md-2"></label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" asp-for="ReviewText" />
+                        <span asp-validation-for="ReviewText" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <input type="submit" value="Create" class="button" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script type="text/javascript">
+        function previewImage(input) {
+            var preview = $("#upload-preview");
+            var fileName = $("#file-name");
+            var file = input.files[0];
+
+            if (!file) {
+                fileName.val("");
+                preview.css("background-image", "").removeClass("file-selected");
+            } else {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.css("background-image", "url(" + e.target.result + ")").addClass("file-selected");
+                    fileName.val(file.name);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+}
