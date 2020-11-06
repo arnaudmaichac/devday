@@ -1,0 +1,167 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "unique_name": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "WebSiteName": "[concat(parameters('unique_name'),'site')]",
+    "StorageAccountName": "[concat(parameters('unique_name'),'stor')]",
+    "RepoUrl": "https://github.com/arnaudmaichac/devday",
+    "Branch": "main"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "sku": {
+        "name": "F0"
+      },
+      "kind": "ComputerVision",
+      "name": "[concat(parameters('unique_name'),'computervision')]",
+      "apiVersion": "2017-04-18",
+      "location": "[resourceGroup().location]",
+      "properties": {},
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "sku": {
+        "name": "F0"
+      },
+      "kind": "ContentModerator",
+      "name": "[concat(parameters('unique_name'),'contentmoderator')]",
+      "apiVersion": "2017-04-18",
+      "location": "[resourceGroup().location]",
+      "properties": {},
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "name": "[variables('StorageAccountName')]",
+      "apiVersion": "2018-07-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "properties": {},
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "S1",
+        "tier": "Standard"
+      },
+      "kind": "app",
+      "name": "[concat(parameters('unique_name'),'farm')]",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {},
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "name": "[variables('WebSiteName')]",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "name": "[concat(parameters('unique_name'),'site')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', concat(parameters('unique_name'),'farm'))]",
+        "metadata": [
+          {
+            "name": "CURRENT_STACK",
+            "value": "dotnetcore"
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', concat(parameters('unique_name'),'farm'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
+      ],
+      "resources": [
+        {
+          "name": "appsettings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('WebSiteName'))]"
+          ],
+          "properties": {
+            "storageAccountConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('StorageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]",
+            "tableName": "beerReviewData",
+            "containerName": "input-images",
+            "queueName": "review-queue",
+            "PROJECT": "src\\BeersReviewApp\\BeersReviewApp.csproj"
+          }
+        },
+        {
+          "name": "web",
+          "type": "sourcecontrols",
+          "apiVersion": "2018-02-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('WebSiteName'))]",
+            "[resourceId('Microsoft.Web/sites/config', variables('WebSiteName'), 'appsettings')]"
+          ],
+          "properties": {
+            "repoUrl": "[variables('RepoUrl')]",
+            "branch": "[variables('Branch')]",
+            "isManualIntegration": true
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[concat(parameters('unique_name'),'function')]",
+      "type": "Microsoft.Web/sites",
+      "kind": "functionapp",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', concat(parameters('unique_name'),'computervision'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', concat(parameters('unique_name'),'contentmoderator'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', concat(parameters('unique_name'),'farm'))]",
+        "siteConfig": {
+          "alwaysOn": true,
+          "appSettings": [
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('StorageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~3"
+            },
+            {
+              "name": "MicrosoftVisionApiKey",
+              "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', concat(parameters('unique_name'),'computervision')), providers('Microsoft.CognitiveServices', 'accounts').apiVersions[0]).key1]"
+            },
+            {
+              "name": "ContentModerationApiKey",
+              "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', concat(parameters('unique_name'),'contentmoderator')), providers('Microsoft.CognitiveServices', 'accounts').apiVersions[0]).key1]"
+            },
+            {
+              "name": "AssetsLocation",
+              "value": "[resourceGroup().location]"
+            },
+            {
+              "name": "tableName",
+              "value": "beerReviewData"
+            },
+            {
+              "name": "queueName",
+              "value": "review-queue"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

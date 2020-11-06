@@ -1,0 +1,12 @@
+﻿{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "__AzureWebJobsStorage__",
+    "MicrosoftVisionApiKey": "__MicrosoftVisionApiKey__",
+    "ContentModerationApiKey": "__ContentModerationApiKey__",
+    "AssetsLocation": "__AssetsLocation__",
+    "tableName": "beerReviewData",
+    "queueName": "review-queue"
+  },
+  "ConnectionStrings": {}
+}

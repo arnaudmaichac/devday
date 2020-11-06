@@ -1,0 +1,44 @@
+﻿@model BeersReviewApp.Models.BeerReview
+
+@{
+    ViewData["Title"] = "Beer Picture";
+}
+
+<style>
+    .picture {
+        width: 100%;
+    }
+
+    .review-body {
+        padding-top: 7em;
+    }
+</style>
+
+<div class="container-fluid">
+    <dev class="row header">
+        <div class="col-md-4 offset-md-8">
+            <a asp-action="Index" class="button back-button">
+                <i class="glyphicon glyphicon-backward"></i> return to reviews
+            </a>
+        </div>
+    </dev>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.MediaUrl" title="@Model.ReviewText" class="picture" />
+        </div>
+        <div class="col-md-6 review-body">
+            <p>
+                Status: <strong>@await Component.InvokeAsync("StatusLabel", Model.IsApproved)</strong>
+            </p>
+            @if (!string.IsNullOrWhiteSpace(Model.Caption))
+            {
+                <p>
+                    Cognitive Services Caption: <strong>@Model.Caption</strong>
+                </p>
+            }
+            <blockquote class="blockquote">
+                @Model.ReviewText
+            </blockquote>
+        </div>
+    </div>
+</div>
