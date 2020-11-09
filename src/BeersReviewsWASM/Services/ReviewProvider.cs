@@ -35,9 +35,23 @@ namespace BeersReviewWASM.Services
             queueName = "review-queue";// configuration.GetValue<string>("queueName");
         }
 
-        public IEnumerable<BeerReview> GetReviewsAsync()
+        public async Task<IEnumerable<BeerReview>> GetReviewsAsync()
         {
-            return table.ExecuteQuery(new TableQuery<BeerReview>());
+            var items = new List<BeerReview>();
+
+            var tableQuery = new TableQuery<BeerReview>();
+            TableContinuationToken token = null;
+
+            do
+            {
+                TableQuerySegment<BeerReview> resultSegment = await table.ExecuteQuerySegmentedAsync(tableQuery, token);
+                token = resultSegment.ContinuationToken;
+
+                items.AddRange(resultSegment.Results);
+            }
+            while (token != null);
+
+            return items;
         }
 
         public async Task<BeerReview> GetReviewAsync(Guid id)

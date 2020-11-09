@@ -41,6 +41,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        reviews = reviewsProvider.GetReviewsAsync();
+        reviews = await reviewsProvider.GetReviewsAsync();
     }
 }
