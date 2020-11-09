@@ -1,0 +1,46 @@
+@page "/reviews"
+
+@using BeersReviewWASM.Services
+@using BeersReviewWASM.Models
+
+@inject BeersReviewWASM.Services.ReviewProvider reviewsProvider
+
+<h1>Beer Reviews</h1>
+
+<p>Here are all the reviews</p>
+
+@if (reviews == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>imageUrl</th>
+                <th>review</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in reviews)
+            {
+                <tr>
+                    <td>@review.Created.ToShortDateString()</td>
+                    <td>@review.MediaUrl</td>
+                    <td>@review.ReviewText</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<BeerReview> reviews;
+
+    protected override async Task OnInitializedAsync()
+    {
+        reviews = reviewsProvider.GetReviewsAsync();
+    }
+}
