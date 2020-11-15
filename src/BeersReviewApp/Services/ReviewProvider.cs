@@ -16,7 +16,7 @@ namespace BeersReviewApp.Services
         private readonly string storageAccountConnectionString;
         private readonly string tableStorageAccountConnectionString;
 
-        private readonly string containerName;
+        private readonly string blobContainerName;
         private readonly string queueName;
 
         private readonly CloudTable table;
@@ -32,7 +32,7 @@ namespace BeersReviewApp.Services
             string tableName = configuration.GetValue<string>("tableName");
             table = tableClient.GetTableReference(tableName);
 
-            containerName = configuration.GetValue<string>("containerName");
+            blobContainerName = configuration.GetValue<string>("blobContainerName");
             queueName = configuration.GetValue<string>("queueName");
         }
 
@@ -54,7 +54,7 @@ namespace BeersReviewApp.Services
             var recordId = Guid.NewGuid();
 
             // save image
-            var blobContainerClient = new BlobContainerClient(storageAccountConnectionString, containerName);
+            var blobContainerClient = new BlobContainerClient(storageAccountConnectionString, blobContainerName);
             await blobContainerClient.CreateIfNotExistsAsync(publicAccessType: Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 
             var blockBlob = blobContainerClient.GetBlobClient(recordId.ToString());
