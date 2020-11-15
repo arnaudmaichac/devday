@@ -1,0 +1,35 @@
+name: Build and Deploy to Azure Static Web App
+
+on:
+  push:
+    branches: [ blazorapp ]
+  pull_request:
+    branches: [ blazorapp ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:            
+    - uses: actions/checkout@v2
+    - uses: azure/login@v1
+      with:
+       creds: ${{ secrets.AZURESTORAGE_STATIC_WEB_APP }}
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+        
+    - name: Build
+      run: dotnet build src/BeersReviewsWASM/BeersReviewsWASM.csproj -c Release
+
+    - name: Publish
+      run: dotnet publish src/BeersReviewsWASM/BeersReviewsWASM.csproj -c Release -o my-app
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+            az storage blob upload-batch --account-name lebaraquillesstor -d '$web' -s ./my-app/wwwroot
