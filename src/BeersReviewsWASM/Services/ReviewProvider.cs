@@ -22,8 +22,7 @@ namespace BeersReviewWASM.Services
 
         public ReviewProvider(IConfiguration configuration)
         {
-            storageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=beerreviewsappstor;AccountKey=F8EEp9N5pVORNql3LhELCnFGz8pZYFnjPAyMbAPmfkBz8jb5aPHx1AORE5IErKxhL1DGW3IrL+jH+bYL/GQOMg==;EndpointSuffix=core.windows.net";
-            //configuration.GetValue<string>("storageAccountConnectionString");
+            storageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=lebaraquillesstor;AccountKey=uEtZ8CivhxApc83A0x9kutnyfudqqMu/E/fTq5mQey45nvqrwR7KaBWS76QSQHkiSN3awbizib1vyLlYs0ss8w==;EndpointSuffix=core.windows.net";//configuration.GetValue<string>("storageAccountConnectionString");
 
             var storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
