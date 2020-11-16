@@ -1,15 +1,21 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
+<header>
     <NavMenu />
-</div>
+</header>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-    </div>
-
-    <div class="content px-4">
+<div id="content_wrapper">
+    <div id="content">
         @Body
     </div>
 </div>
+
+<footer>
+    <p>
+        <a href="#">Privacy & Cookies</a>
+        <a href="#">Website Terms of Use</a>
+        <a href="#">Trademarks</a>
+        <a href="#">Report Abuse</a>
+        <span>&copy; @DateTime.Now.Year - Baraki N.V.</span>
+    </p>
+</footer>

@@ -17,32 +17,37 @@ namespace BeersReviewsWASM
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-            ConfigureServices(builder.Services);
-
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            builder.Services.AddSingleton<ReviewProvider>();
+
             await builder.Build().RunAsync();
         }
 
-        public static void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton<ReviewProvider>();
-            //services.AddSingleton(provider =>
-            //{
-            //    var config = provider.GetService<IConfiguration>();
-            //    return config.GetSection("App").Get<AppConfiguration>();
-            //});
-        }
+
 
     }
 
-    internal class AppConfiguration
-    {
-        public string tableName { get; set; }
-        public string containerName { get; set; }
-        public string queueName { get; set; }
-        public string storageAccountConnectionString { get; set; }
-    }
 }
+
+
+
+
+//public static void ConfigureServices(IServiceCollection services)
+//{
+//    services.AddSingleton<ReviewProvider>();
+//    //services.AddSingleton(provider =>
+//    //{
+//    //    var config = provider.GetService<IConfiguration>();
+//    //    return config.GetSection("App").Get<AppConfiguration>();
+//    //});
+//}
+//internal class AppConfiguration
+//{
+//    public string tableName { get; set; }
+//    public string containerName { get; set; }
+//    public string queueName { get; set; }
+//    public string storageAccountConnectionString { get; set; }
+//}

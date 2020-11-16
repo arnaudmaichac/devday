@@ -1,0 +1,64 @@
+﻿@page "/details/{ReviewId:guid}"
+
+@using BeersReviewWASM.Services
+@using BeersReviewWASM.Models
+
+@inject BeersReviewWASM.Services.ReviewProvider reviewsProvider
+
+<style>
+    .picture {
+        width: 100%;
+    }
+
+    .review-body {
+        padding-top: 7em;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row header">
+        <div class="col-md-4 offset-md-8">
+            <NavLink class="nav-link button back-button" href="/Reviews">
+                <i class="glyphicon glyphicon-backward"></i> return to reviews
+            </NavLink>
+        </div>
+    </div>
+    @if (review == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="@review.MediaUrl" title="@review.ReviewText" class="picture" />
+            </div>
+            <div class="col-md-6 review-body">
+                <p>
+                    Status: @*<strong>@await Component.InvokeAsync("StatusLabel", review.IsApproved)</strong>*@
+                </p>
+                @if (!string.IsNullOrWhiteSpace(review.Caption))
+                {
+                    <p>
+                        Cognitive Services Caption: <strong>@review.Caption</strong>
+                    </p>
+                }
+                <blockquote class="blockquote">
+                    @review.ReviewText
+                </blockquote>
+            </div>
+        </div>
+    }
+    </div>
+
+@code {
+    [Parameter] public Guid ReviewId { get; set; }
+    private BeerReview review;
+
+    protected override async Task OnInitializedAsync()
+    {
+        review = await reviewsProvider.GetReviewAsync(ReviewId);
+    }
+
+}

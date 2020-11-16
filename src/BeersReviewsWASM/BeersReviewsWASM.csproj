@@ -6,6 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\site.css" />
+    <Content Remove="wwwroot\images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\site.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.6.0" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
@@ -21,8 +33,16 @@
     <Content Update="wwwroot\appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\css\bootstrap.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4appsettings_1json__JsonSchema="http://json.schemastore.org/apibuilder.json" /></VisualStudio></ProjectExtensions>
 
 </Project>

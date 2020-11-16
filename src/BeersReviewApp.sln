@@ -5,9 +5,7 @@ VisualStudioVersion = 16.0.29609.76
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeersReviewApp", "BeersReviewApp\BeersReviewApp.csproj", "{31C4FF77-19AF-4379-AAC9-944BE01142A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeersReviewSPA", "BeersReviewSPA\BeersReviewSPA.csproj", "{A1404F9B-0173-4F5A-8C35-781E084498EB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeersReviewsWASM", "BeersReviewsWASM\BeersReviewsWASM.csproj", "{4E43FA8E-FD15-47BF-9DDB-BE896CA532F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeersReviewsWASM", "BeersReviewsWASM\BeersReviewsWASM.csproj", "{4E43FA8E-FD15-47BF-9DDB-BE896CA532F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{31C4FF77-19AF-4379-AAC9-944BE01142A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31C4FF77-19AF-4379-AAC9-944BE01142A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31C4FF77-19AF-4379-AAC9-944BE01142A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1404F9B-0173-4F5A-8C35-781E084498EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1404F9B-0173-4F5A-8C35-781E084498EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1404F9B-0173-4F5A-8C35-781E084498EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1404F9B-0173-4F5A-8C35-781E084498EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E43FA8E-FD15-47BF-9DDB-BE896CA532F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E43FA8E-FD15-47BF-9DDB-BE896CA532F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E43FA8E-FD15-47BF-9DDB-BE896CA532F2}.Release|Any CPU.ActiveCfg = Release|Any CPU

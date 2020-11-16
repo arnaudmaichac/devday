@@ -9,38 +9,83 @@
 
 <p>Here are all the reviews</p>
 
-@if (reviews == null)
+@if (filteredReviews == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>imageUrl</th>
-                <th>review</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var review in reviews)
-            {
-                <tr>
-                    <td>@review.Created.ToShortDateString()</td>
-                    <td>@review.MediaUrl</td>
-                    <td>@review.ReviewText</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="container-fluid grid-page">
+        <div class="row">
+            <div class="col-md-4 offset-md-8">
+                <NavLink class="nav-link" href="Create">
+                    <i class="glyphicon glyphicon-plus"></i> Add a review
+                </NavLink>
+            </div>
+        </div>
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                @foreach (var tab in filteredReviews)
+                {
+                    <li role="presentation" class="nav-item">
+                        <a class="@(tab.Active ? "nav-link active" : "nav-link")" href="#@tab.Name" @onclick="@(() => SetActiveFilter(tab.Name))" aria-controls="@tab.Name" role="tab" data-toggle="tab">@tab.Name (@tab.Images.Count())</a>
+                    </li>
+                }
+            </ul>
+
+            <div class="tab-content">
+                @foreach (var tab in filteredReviews)
+                {
+                    <div role="tabpanel" class="tab-pane @(tab.Active ? "active" : "")" id="@tab.Name">
+                        <div class="row">
+                            @foreach (var image in tab.Images)
+                            {
+                                <div class="col-md-4 review">
+                                    <a href="details/@image.RowKey">
+                                        <div class="thumb" style="background-image: url(@image.MediaUrl)">
+                                            <div class="thumb-text">
+                                                @image.ReviewText
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
 }
 
 @code {
-    private IEnumerable<BeerReview> reviews;
+    private IEnumerable<FilteredReviews> filteredReviews;
 
     protected override async Task OnInitializedAsync()
     {
-        reviews = await reviewsProvider.GetReviewsAsync();
+        var reviews = await reviewsProvider.GetReviewsAsync();
+        filteredReviews = new List<FilteredReviews>
+        {
+                new FilteredReviews() { Name = "Approved", Images = reviews.Where(i => i.IsApproved == true).ToList(), Active = true },
+                new FilteredReviews() { Name = "Rejected", Images = reviews.Where(i => i.IsApproved == false).ToList(), Active = false },
+                new FilteredReviews() { Name = "Pending", Images = reviews.Where(i => !i.IsApproved.HasValue).ToList(), Active = false },
+            };
+    }
+
+    async Task SetActiveFilter(String status)
+    {
+        foreach (var item in filteredReviews)
+        {
+            item.Active = item.Name == status ? true : false;
+        }
+    }
+
+    class FilteredReviews
+    {
+        public String Name { get; set; }
+        public IEnumerable<BeerReview> Images { get; set; }
+        public Boolean Active { get; set; }
     }
 }
